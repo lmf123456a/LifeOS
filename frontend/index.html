@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeOS · 日常规划与知识复盘</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <aside id="sidebar">
+    <div class="logo">
+      <div class="brand"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.8 8.2-2.2 5.4-5.4 2.2 2.2-5.4z"/></svg> LifeOS</div>
+      <span class="logo-sub">Daily · Review</span>
+    </div>
+    <nav id="nav">
+      <a data-page="dashboard" class="nav-item active"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>概览</a>
+      <a data-page="tasks" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>今日规划</a>
+      <a data-page="courses" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>课表</a>
+      <a data-page="plans" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>长期计划</a>
+      <a data-page="habits" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 3c.8 2.6 3.8 4.4 3.8 7.9a4.4 4.4 0 0 1-8.8 0c0-1.6.7-3 1.6-4.2.5 1.1 1.5 1.7 2.4 1.8C11 6.6 11.7 4.3 12.5 3z"/></svg>习惯</a>
+      <a data-page="notes" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19A2.5 2.5 0 0 1 7 16.5H19.5V3.5A1 1 0 0 0 18.5 2.5H7A2.5 2.5 0 0 0 4.5 5v14z"/><path d="M4.5 19A2.5 2.5 0 0 0 7 21.5h12.5v-5"/></svg>笔记</a>
+      <a data-page="reviews" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.6 0-3.1-.4-4.4-1.2L3 20l1.4-3.9A8.5 8.5 0 1 1 20.5 11.5z"/><path d="m12 7 .9 2.1L15 10l-2.1.9L12 13l-.9-2.1L9 10l2.1-.9z"/></svg>费曼复盘</a>
+      <a data-page="reports" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7"/><path d="M2 20h20"/></svg>报告</a>
+      <a data-page="reflections" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10M7 21h10"/><path d="M8 3c0 4.8 4 6.4 4 9s-4 4.2-4 9M16 3c0 4.8-4 6.4-4 9s4 4.2 4 9"/></svg>反思总结</a>
+      <a data-page="settings" class="nav-item"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h8.5M16.5 7H20M4 17h3M11 17h9"/><circle cx="14.5" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>设置</a>
+    </nav>
+    <div class="sidebar-footer" id="sidebar-footer"></div>
+  </aside>
+  <main id="main">
+    <header id="page-header"></header>
+    <div id="page-content"></div>
+  </main>
+</div>
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+<script>
+  // 从启动 URL 捕获会话令牌（防本机其他进程直连 API）
+  try {
+    sessionStorage.setItem('lifeos_token', new URLSearchParams(location.search).get('token') || '');
+  } catch (e) { /* ignore */ }
+</script>
+<script src="js/api.js"></script>
+<script src="js/markdown.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/notify.js"></script>
+<script src="js/quotes.js"></script>
+<script src="js/views/dashboard.js"></script>
+<script src="js/views/tasks.js"></script>
+<script src="js/views/courses.js"></script>
+<script src="js/views/plans.js"></script>
+<script src="js/views/habits.js"></script>
+<script src="js/views/notes.js"></script>
+<script src="js/views/reviews.js"></script>
+<script src="js/views/reports.js"></script>
+<script src="js/views/reflections.js"></script>
+<script src="js/views/settings.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
