@@ -82,6 +82,42 @@ def keep_alive() -> None:
         pass
 
 
+def _disable_dwm_chrome(win) -> None:
+    """禁用 Windows 11 DWM 给 frameless 窗口自动加的系统圆角/阴影。
+
+    透明窗口即使 CSS 零装饰，Win11 仍会在窗口四周画上系统圆角轮廓和投影，
+    看起来就像"多余的边缘"。此函数在窗口创建后拿到 HWND，强制关闭：
+      - DWMWA_WINDOW_CORNER_PREFERENCE(33) = DWMWCP_DONOTROUND(1)
+      - DWMWA_NCRENDERING_POLICY(2) = DWMNCRP_DISABLED(1)（去掉系统投影）
+    通过 pywebview 的 native 句柄调用，晚于窗口真实创建（轮询等待）。
+    """
+    import ctypes
+
+    for _ in range(100):  # 最多等 10s，等待窗口句柄出现
+        native = getattr(win, "native", None)
+        if native is not None:
+            try:
+                hwnd = int(native.Handle)
+            except Exception:
+                hwnd = 0
+            if hwnd:
+                try:
+                    dwm = ctypes.windll.dwmapi.DwmSetWindowAttribute
+                    # 去掉系统圆角
+                    pref = ctypes.c_int(1)  # DWMWCP_DONOTROUND
+                    dwm(hwnd, 33, ctypes.byref(pref), ctypes.sizeof(pref))
+                    # 去掉系统投影/边框渲染
+                    policy = ctypes.c_int(1)  # DWMNCRP_DISABLED
+                    dwm(hwnd, 2, ctypes.byref(policy), ctypes.sizeof(policy))
+                    logging.info("悬浮窗系统圆角/阴影已禁用 (DWM)")
+                    return
+                except Exception as e:
+                    logging.warning(f"禁用悬浮窗系统圆角失败: {e!r}")
+                    return
+        time.sleep(0.1)
+    logging.warning("等待悬浮窗句柄超时，未禁用系统圆角")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="LifeOS 日常规划与知识复盘")
     parser.add_argument(
@@ -164,7 +200,7 @@ def main() -> int:
                     wa_right, wa_bottom = rect.right, rect.bottom
                 except Exception:
                     wa_right, wa_bottom = 1920, 1040
-                fw, fh = 420, 76  # 跑道型胶囊
+                fw, fh = 440, 96  # 窗口比胶囊(420×76)四周各多 10px 透明边距，圆角永不贴边
                 float_url = f"http://127.0.0.1:{self._port}/float.html?token={self._token}"
                 float_api = _FloatAPI()
                 float_win = webview.create_window(
@@ -183,6 +219,10 @@ def main() -> int:
                 float_api.bind(float_win)
                 self._float_win = float_win
                 logging.info("悬浮窗已创建（右下角跑道型）")
+                # Win11 DWM 会给无边框窗口画系统圆角/阴影 → 后台线程禁用（不阻塞启动）
+                threading.Thread(
+                    target=_disable_dwm_chrome, args=(float_win,), daemon=True
+                ).start()
 
             def toggle_float(self):
                 if self._float_win is None:

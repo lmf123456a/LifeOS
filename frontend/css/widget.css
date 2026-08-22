@@ -4,15 +4,16 @@
    零新色值（仅 v4 令牌与 v2 既有 rgba）· float.js 选择器零改动
    ============================================================ */
 html, body { margin: 0; padding: 0; overflow: hidden; background: transparent !important; }
+/* 悬浮窗不继承主站背景：彻底清掉 body 底色和两个铺满全屏的装饰伪元素（光晕/网格），否则整窗变米白矩形 */
+body::before, body::after { display: none !important; background: transparent !important; }
 /* —— 胶囊本体 —— */
 .widget {
   position: relative; width: 420px; height: 76px;
+  margin: 10px;                                      /* 四周留透明边距：圆角永不贴窗口边缘，杜绝毛边 */
   border-radius: var(--radius-pill);                 /* 999px 钳制为 38px=高度一半 → 两端半圆 */
-  background: linear-gradient(165deg, rgba(255,255,255,0.42), rgba(250,247,242,0.32)); /* α≈0.40 */
-  border: 1px solid rgba(255,255,255,0.45);
-  box-shadow: 0 0 0 1px rgba(38,34,29,0.04), inset 0 1px 0 rgba(255,255,255,0.55),
-              inset 0 -1px 0 rgba(38,34,29,0.03), var(--shadow-2), 0 14px 36px rgba(234,88,12,0.10);
-  backdrop-filter: blur(30px) saturate(1.5); -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  background: linear-gradient(165deg, rgba(255,255,255,0.35), rgba(250,247,242,0.24)); /* α≈0.30 更隐形 */
+  border: none;                                       /* 无描边：边缘完全干净 */
+  box-shadow: none;                                   /* 无任何外圈/内高光线：边缘零装饰 */
   overflow: hidden; display: flex; align-items: center;
   color: var(--text); font-family: var(--font); user-select: none;
   text-shadow: 0 1px 2px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.45); /* 白晕兜底 */
