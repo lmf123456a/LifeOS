@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api/backup", tags=["backup"])
 
 TABLES = (
     "tasks", "plans", "courses", "habits", "habit_logs",
-    "notes", "cards", "explanations", "reflections", "settings",
+    "notes", "cards", "explanations", "reflections", "timers", "settings",
 )
 
 SECRET_KEYS = ("deepseek_api_key",)

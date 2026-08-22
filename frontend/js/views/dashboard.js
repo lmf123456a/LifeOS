@@ -66,6 +66,7 @@ const DashboardView = {
           <div class="item"><div class="num text-success">${done}/${d.tasks.length}</div><div class="lbl">任务完成</div></div>
           <div class="item"><div class="num" style="color:var(--warning-deep)">${habitsDone}/${d.habits.length}</div><div class="lbl">习惯打卡</div></div>
           <div class="item"><div class="num text-accent">${d.due_cards}</div><div class="lbl">待复习</div></div>
+          <div class="item"><div class="num" style="color:var(--accent)">${Math.round((d.focus_seconds || 0) / 60)}<span style="font-size:14px">分</span></div><div class="lbl">今日专注</div></div>
         </div>
       </div>
       ${d.due_cards > 0 ? `
@@ -126,6 +127,7 @@ const DashboardView = {
             <button class="btn" data-go="notes">📝 随手记笔记</button>
             <button class="btn" data-go="reflections">🪞 写今日反思</button>
             <button class="btn" data-go="reports">📈 查看本周报告</button>
+            <button class="btn" id="dashFloatBtn" type="button">🪟 悬浮窗：<span id="dashFloatState">…</span></button>
           </div>
         </div>
       </div>`;
@@ -160,5 +162,27 @@ const DashboardView = {
     $$('[data-note]', c).forEach(el => {
       el.onclick = () => NotesView.openEditor(el.dataset.note);
     });
+    // 悬浮窗开关：桌面窗口模式通过 pywebview 显示/隐藏，浏览器模式降级提示
+    const floatBtn = c.querySelector('#dashFloatBtn');
+    if (floatBtn) {
+      const stateEl = c.querySelector('#dashFloatState');
+      const hasApi = !!(window.pywebview && window.pywebview.api && window.pywebview.api.toggle_float);
+      const setState = on => { stateEl.textContent = on ? '已开启' : '已关闭'; };
+      const refresh = async () => {
+        if (!hasApi) { stateEl.textContent = '仅桌面可用'; return; }
+        try { setState(!!(await window.pywebview.api.float_visible())); }
+        catch (e) { setState(false); }
+      };
+      refresh();
+      floatBtn.onclick = async () => {
+        if (!hasApi) { toast('悬浮窗仅在桌面窗口模式可用', 'error'); return; }
+        try {
+          const on = await window.pywebview.api.toggle_float();
+          setState(!!on);
+          await api('/api/settings', { method: 'PUT', body: { float_enabled: on ? '1' : '0' } });
+          toast(on ? '悬浮窗已开启' : '悬浮窗已关闭');
+        } catch (e) { toast(e.message, 'error'); }
+      };
+    }
   }
 };

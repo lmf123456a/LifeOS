@@ -171,6 +171,7 @@ const ICON_PATHS = {
   reports: '<path d="M4 20V10M10 20V4M16 20v-7"/><path d="M2 20h20"/>',
   reflections: '<path d="M7 3h10M7 21h10"/><path d="M8 3c0 4.8 4 6.4 4 9s-4 4.2-4 9M16 3c0 4.8-4 6.4-4 9s4 4.2 4 9"/>',
   settings: '<path d="M4 7h8.5M16.5 7H20M4 17h3M11 17h9"/><circle cx="14.5" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
+  timer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6M12 5V2"/>',
   compass: '<circle cx="12" cy="12" r="9"/><path d="m15.8 8.2-2.2 5.4-5.4 2.2 2.2-5.4z"/>',
 };
 

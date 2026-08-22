@@ -3,6 +3,7 @@ const PAGES = {
   dashboard: { title: '概览', sub: '今天的状态，一目了然', eyebrow: 'Overview', view: DashboardView },
   tasks: { title: '今日规划', sub: '安排每一天的任务', eyebrow: 'Today', view: TasksView },
   courses: { title: '课表', sub: '一周课程一目了然，自动融入行程', eyebrow: 'Timetable', view: CoursesView },
+  timers: { title: '项目计时', sub: '正计时 / 倒计时 / 番茄计时，记录每一次专注', eyebrow: 'Focus', view: TimerView },
   plans: { title: '长期计划', sub: '月任务与年任务，盯住大目标', eyebrow: 'Plans', view: PlansView },
   habits: { title: '习惯追踪', sub: '小习惯，大改变', eyebrow: 'Habits', view: HabitsView },
   notes: { title: '知识笔记库', sub: '记录、沉淀、转化', eyebrow: 'Notes', view: NotesView },
@@ -47,6 +48,7 @@ function updateFooter() {
 
 document.addEventListener('DOMContentLoaded', () => {
   Notify.init();
+  TimerManager.init();
   $$('#nav .nav-item').forEach(a => {
     a.onclick = () => navigate(a.dataset.page);
   });

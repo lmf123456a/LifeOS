@@ -1078,6 +1078,56 @@ details.summary-card .content { padding: 0 16px 13px; white-space: pre-wrap; fon
 .preview-table td { padding: 7px 12px; border-bottom: 1px solid var(--border); color: var(--text-2); }
 .preview-table tr:last-child td { border-bottom: none; }
 
+/* ===== 项目计时 ===== */
+.timer-pill {
+  position: fixed;
+  top: 16px;
+  right: 22px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px 7px 14px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-2);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.timer-pill-ico { display: flex; color: var(--accent-2); }
+.timer-pill-time {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-size: 14px;
+}
+.timer-pill-label { color: var(--muted-2); max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.timer-pill-btn {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.timer-pill-btn:hover { background: var(--accent-soft); color: var(--accent-deep); }
+.timer-live { text-align: center; padding: 26px; }
+.timer-big {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 10px 0 18px;
+  line-height: 1.1;
+}
+
 /* ===== 动效收口：尊重系统"减少动态效果"设置 ===== */
 @media (prefers-reduced-motion: reduce) {
   .task-check.done .chk-svg path,

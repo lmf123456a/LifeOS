@@ -1,0 +1,121 @@
+/* ============================================================
+   LifeOS 悬浮窗 v3 · 跑道型胶囊 420×76 · 两端全圆（圆角=高度一半）
+   玻璃 α≈0.40 + blur · 每态橙色只亮一处 · 白晕兜底浅/深桌面可读
+   零新色值（仅 v4 令牌与 v2 既有 rgba）· float.js 选择器零改动
+   ============================================================ */
+html, body { margin: 0; padding: 0; overflow: hidden; background: transparent !important; }
+/* —— 胶囊本体 —— */
+.widget {
+  position: relative; width: 420px; height: 76px;
+  border-radius: var(--radius-pill);                 /* 999px 钳制为 38px=高度一半 → 两端半圆 */
+  background: linear-gradient(165deg, rgba(255,255,255,0.42), rgba(250,247,242,0.32)); /* α≈0.40 */
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: 0 0 0 1px rgba(38,34,29,0.04), inset 0 1px 0 rgba(255,255,255,0.55),
+              inset 0 -1px 0 rgba(38,34,29,0.03), var(--shadow-2), 0 14px 36px rgba(234,88,12,0.10);
+  backdrop-filter: blur(30px) saturate(1.5); -webkit-backdrop-filter: blur(30px) saturate(1.5);
+  overflow: hidden; display: flex; align-items: center;
+  color: var(--text); font-family: var(--font); user-select: none;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.9), 0 0 10px rgba(255,255,255,0.45); /* 白晕兜底 */
+}
+.widget::before {                                    /* 晨光氛围（非强调色） */
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(110% 130% at 88% -20%, rgba(251,146,60,0.14), rgba(249,115,22,0.02) 46%, transparent 62%);
+}
+.widget[data-state="timer"]::after {                 /* 计时态中央呼吸光晕（氛围） */
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(72% 140% at 50% 50%, rgba(249,115,22,0.12), transparent 62%);
+  animation: focusBreath 3.6s ease-in-out infinite;
+}
+
+/* —— 右上 ×：小型栖于肩部，不破轮廓 —— */
+.wid-close {
+  position: absolute; top: 9px; right: 9px; z-index: 5;
+  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+  padding: 0; border: none; border-radius: 50%;
+  background: transparent; color: var(--muted-2); font-size: 14px; line-height: 1; cursor: pointer;
+  opacity: 0.5; transition: opacity .18s ease, color .18s ease, background .18s ease, transform .18s ease;
+}
+.wid-close:hover { opacity: 1; color: var(--accent-deep); background: var(--accent-soft); transform: rotate(90deg); }
+
+/* —— 双态同轨：胶囊内横向布局，切换横向滑入滑出 —— */
+.wid-states { position: relative; flex: 1; align-self: stretch; }
+.wid-state {
+  position: absolute; inset: 0; display: flex; align-items: center; gap: 12px;
+  padding: 0 34px 0 14px;                            /* 右侧 34px 给 × 让位 */
+  transition: opacity .28s ease, transform .28s ease, visibility .28s;
+}
+.wid-timer { opacity: 0; transform: translateX(14px); pointer-events: none; visibility: hidden; }
+.widget[data-state="timer"] .wid-idle { opacity: 0; transform: translateX(-14px); pointer-events: none; visibility: hidden; }
+.widget[data-state="timer"] .wid-timer { opacity: 1; transform: none; pointer-events: auto; visibility: visible; }
+
+/* —— 空闲态：橙徽章 + 横向滚动 + 完成数 —— */
+.wid-idle-ico {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.5px;
+  background: var(--accent-grad); box-shadow: var(--glow-accent); /* 本态唯一橙色 */
+  text-shadow: none;
+}
+.wid-idle-ico i { width: 3px; height: 3px; border-radius: 50%; background: #fff; }
+.wid-carousel { position: relative; flex: 1; min-width: 0; align-self: stretch; overflow: hidden; }
+.wid-item { position: absolute; inset: 0; display: flex; align-items: center; gap: 8px; opacity: 0; pointer-events: none; white-space: nowrap; }
+.wid-item.on { opacity: 1; }
+.wid-item.enter { animation: itemInR .5s cubic-bezier(.2,.9,.3,1.1) both; }
+.wid-item.leave { animation: itemOutL .42s ease both; }
+.wid-item-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.wid-item-title span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.wid-item-title.done { color: var(--muted-2); text-decoration: line-through; }
+.wid-item-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: var(--dot, var(--text-2)); }
+.wid-item-meta { flex-shrink: 0; font-size: 11px; color: var(--muted-2); }
+.wid-idle-end { flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+.wid-count { font-size: 12.5px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.wid-progress { width: 44px; height: 4px; border-radius: var(--radius-pill); background: rgba(38,34,29,0.10); overflow: hidden; }
+.wid-progress i { display: block; height: 100%; border-radius: inherit; background: var(--text); transition: width .6s ease; }
+.wid-dots { display: none; }                          /* 胶囊无页码位；保留钩子防 float.js 报错 */
+
+/* —— 计时态：徽章 + 大数字 + 任务名/呼吸点 —— */
+.wid-mode-pill {
+  flex-shrink: 0; font-size: 11px; font-weight: 800; letter-spacing: 0.06em;
+  color: #fff; background: var(--accent-grad); padding: 4px 13px; border-radius: var(--radius-pill);
+  box-shadow: var(--glow-accent); text-shadow: none;  /* 本态唯一橙色 */
+}
+.wid-time-wrap { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.wid-time {
+  font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1;
+  font-variant-numeric: tabular-nums; color: var(--text); /* 深墨+白晕，浅/深桌面通吃 */
+}
+.widget[data-state="timer"][data-paused="1"] .wid-time { color: var(--muted-2); }
+.wid-timer-bar { width: 110px; height: 3px; border-radius: var(--radius-pill); background: rgba(38,34,29,0.10); overflow: hidden; }
+.wid-timer-bar i { display: block; height: 100%; border-radius: inherit; background: var(--text); transition: width .4s ease; }
+.widget[data-state="timer"][data-mode="countup"] .wid-timer-bar { visibility: hidden; }
+.widget[data-state="timer"][data-paused="1"] .wid-mode-pill { opacity: 0.55; }
+.wid-task { flex-shrink: 0; max-width: 108px; font-size: 12.5px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wid-live-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: var(--success); box-shadow: 0 0 8px var(--success); animation: livePulse 2.4s ease-in-out infinite; }
+.widget[data-state="timer"][data-paused="1"] .wid-live-dot { animation: none; opacity: 0.4; }
+/* —— 动效 —— */
+@keyframes itemInR { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } } @keyframes itemOutL { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(-18px); } }
+@keyframes focusBreath { 0%, 100% { opacity: .45; } 50% { opacity: 1; } } @keyframes livePulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.75); } }
+
+/* —— 跑道型无缝跑马灯（data-marquee="loop"）——
+   视口仍是 .wid-carousel（flex:1 + overflow:hidden），
+   内部 .wid-track 为复制一份内容的横向轨道，translateX(-50%) 无缝循环；
+   两端 mask 渐隐，悬停暂停方便阅读 */
+.wid-carousel[data-marquee="loop"] {
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+.wid-track {
+  display: flex; align-items: center; gap: 40px;
+  width: max-content; height: 100%;
+  animation: marqueeLoop 22s linear infinite;
+  will-change: transform;
+}
+.wid-carousel[data-marquee="loop"]:hover .wid-track { animation-play-state: paused; }
+.wid-track .wid-item {
+  position: relative; inset: auto; opacity: 1; pointer-events: none;
+  animation: none !important;                       /* 跑马灯内不做逐个进入/离开动画 */
+  flex-shrink: 0;
+}
+.wid-track .wid-item-title span { overflow: visible; text-overflow: clip; } /* 跑马灯内不截断，完整滚动 */
+@keyframes marqueeLoop { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+@media (prefers-reduced-motion: reduce) { .widget *, .widget::before, .widget::after { animation: none !important; } }

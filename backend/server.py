@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from .database import DATA_DIR, init_db
-from .routes import backup, courses, files, habits, notes, plans, reflections, reminders, reports, reviews, settings, tasks
+from .routes import backup, courses, files, habits, notes, plans, reflections, reminders, reports, reviews, settings, tasks, timers
 from .services import ai
 
 # 前端目录：打包成 exe 时从内置资源(_MEIPASS)读取，开发时在项目根
@@ -54,7 +54,7 @@ def create_app(token: str = "") -> FastAPI:
     @app.get("/api/version")
     def version():
         """前端用它检测服务端是否过旧（API 号增加 = 后端有新增接口）。"""
-        return {"version": "2.7", "api": 10}
+        return {"version": "2.8", "api": 11}
 
     for router in (
         tasks.router,
@@ -69,6 +69,7 @@ def create_app(token: str = "") -> FastAPI:
         plans.router,
         courses.router,
         reflections.router,
+        timers.router,
     ):
         app.include_router(router)
     app.mount("/images", StaticFiles(directory=str(IMAGES_DIR)), name="images")

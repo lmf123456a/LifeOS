@@ -36,6 +36,14 @@ const SettingsView = {
           <div class="hint">应用运行期间每分钟检查一次，会在应用内弹提醒；系统通知需要浏览器/WebView 允许通知权限。</div>
         </div>
         <div class="card" style="max-width:660px;margin-top:16px">
+          <div class="card-title">桌面悬浮窗</div>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13.5px">
+            <input type="checkbox" id="s-float" ${s.float_enabled === '1' ? 'checked' : ''} style="width:17px;height:17px;accent-color:var(--accent)">
+            显示常驻悬浮窗（右下角：今日计划滚动 / 计时显示）
+          </label>
+          <div class="hint">悬浮窗可拖动；点右上角 × 立即关闭并记住选择；重新开启需重启应用生效。</div>
+        </div>
+        <div class="card" style="max-width:660px;margin-top:16px">
           <div class="card-title">数据备份</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <button class="btn" id="b-export">📤 导出备份（JSON）</button>
@@ -88,6 +96,17 @@ const SettingsView = {
         try {
           await api('/api/settings', { method: 'PUT', body: { notify_enabled: e.target.checked ? '1' : '0' } });
           toast(e.target.checked ? '提醒已开启' : '提醒已关闭', 'success');
+        } catch (err) {
+          toast(err.message, 'error');
+          e.target.checked = !e.target.checked;
+        }
+      };
+
+      /* ---- 悬浮窗开关 ---- */
+      $('#s-float', c).onchange = async (e) => {
+        try {
+          await api('/api/settings', { method: 'PUT', body: { float_enabled: e.target.checked ? '1' : '0' } });
+          toast(e.target.checked ? '悬浮窗已开启，重启后生效' : '悬浮窗已关闭（当前窗口可点 × 立即关闭）', 'success');
         } catch (err) {
           toast(err.message, 'error');
           e.target.checked = !e.target.checked;

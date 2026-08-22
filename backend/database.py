@@ -121,6 +121,19 @@ CREATE TABLE IF NOT EXISTS reflections (
     UNIQUE(type, period)
 );
 
+CREATE TABLE IF NOT EXISTS timers (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    mode             TEXT NOT NULL,          -- stopwatch | countdown | pomodoro
+    task_id          INTEGER,
+    task_title       TEXT DEFAULT '',
+    duration_seconds INTEGER DEFAULT 0,      -- 计划时长（倒计时/番茄工作）
+    elapsed_seconds  INTEGER DEFAULT 0,      -- 实际专注秒数
+    rounds           INTEGER DEFAULT 0,      -- 番茄完成轮数
+    started_at       TEXT DEFAULT (datetime('now','localtime')),
+    ended_at         TEXT,
+    created_at       TEXT DEFAULT (datetime('now','localtime'))
+);
+
 CREATE TABLE IF NOT EXISTS settings (
     key   TEXT PRIMARY KEY,
     value TEXT

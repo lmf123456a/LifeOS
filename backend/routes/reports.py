@@ -206,6 +206,10 @@ def dashboard():
            ORDER BY progress DESC, id DESC LIMIT 4""",
         (d[:7],),
     )
+    focus_seconds = database.query_one(
+        "SELECT COALESCE(SUM(elapsed_seconds), 0) AS s FROM timers WHERE date(started_at) = ?",
+        (d,),
+    )["s"]
 
     return {
         "today": d,
@@ -224,4 +228,5 @@ def dashboard():
         "due_cards": due_cards,
         "recent_notes": recent_notes,
         "plans_month": plans_month,
+        "focus_seconds": focus_seconds,
     }

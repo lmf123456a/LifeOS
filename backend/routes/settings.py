@@ -8,7 +8,7 @@ from ..services import ai
 
 router = APIRouter(prefix="/api/settings", tags=["settings"])
 
-KEYS = ("deepseek_api_key", "deepseek_base_url", "deepseek_model", "profile", "notify_enabled")
+KEYS = ("deepseek_api_key", "deepseek_base_url", "deepseek_model", "profile", "notify_enabled", "float_enabled")
 
 
 @router.get("")
@@ -20,6 +20,7 @@ def get_settings():
         "deepseek_model": s.get("deepseek_model", ai.DEFAULT_MODEL),
         "profile": s.get("profile", ""),
         "notify_enabled": s.get("notify_enabled", "1"),
+        "float_enabled": s.get("float_enabled", "1"),
         "configured": ai.is_configured(),
     }
 

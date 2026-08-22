@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LifeOS Widget</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/widget.css">
+</head>
+<body>
+<div class="widget" id="widget" data-state="idle" role="region" aria-label="LifeOS 悬浮窗">
+  <button class="wid-close" id="widClose" type="button" aria-label="关闭悬浮窗" title="关闭悬浮窗">×</button>
+  <div class="wid-states">
+    <!-- 空闲态：橙徽章 + 横向跑马灯 + 完成数 -->
+    <section class="wid-state wid-idle" aria-label="今日计划">
+      <span class="wid-idle-ico" aria-hidden="true"><i></i><i></i><i></i></span>
+      <div class="wid-carousel" id="carousel" data-marquee="loop"></div>
+      <span class="wid-idle-end">
+        <b class="wid-count" id="idleCount">–</b>
+        <span class="wid-progress" aria-hidden="true"><i id="widProgress" style="width:0%"></i></span>
+      </span>
+    </section>
+    <!-- 计时态：模式徽章 + 大数字 + 任务名/呼吸点 -->
+    <section class="wid-state wid-timer" aria-label="计时中">
+      <span class="wid-mode-pill" id="modeLabel">计时</span>
+      <div class="wid-time-wrap">
+        <div class="wid-time" id="timerTime">00:00</div>
+        <div class="wid-timer-bar"><i id="timerFill" style="width:0%"></i></div>
+      </div>
+      <span class="wid-task" id="taskName">–</span>
+      <i class="wid-live-dot" aria-hidden="true"></i>
+    </section>
+  </div>
+  <!-- 页码钩子：胶囊内不再展示，保留给 float.js 的轮播/旋转逻辑 -->
+  <div class="wid-dots" id="widDots"></div>
+</div>
+<script>
+  try {
+    sessionStorage.setItem('lifeos_token', new URLSearchParams(location.search).get('token') || '');
+  } catch (e) { /* ignore */ }
+</script>
+<script src="js/api.js"></script>
+<script src="js/float.js"></script>
+</body>
+</html>
